@@ -9,7 +9,7 @@ MidiSound = class MidiSound{
 
         return new Promise((resolve, reject) => {
             MIDI.loadPlugin({
-                soundfontUrl: './packages/midi-sound/soundfont/',
+                soundfontUrl: '/packages/midi-sound/soundfont/',
                 instrument: 'acoustic_grand_piano',
                 onsuccess: () => {
                     // check for AudioBuffers seems to be the best insurance right now
