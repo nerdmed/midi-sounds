@@ -1,0 +1,6 @@
+{
+	"preset": "airbnb",
+	"esnext": true,
+	"safeContextKeyword": ["self", "tmpl"],
+	"validateIndentation": 4
+}
