@@ -4,22 +4,26 @@ MidiSound = class MidiSound{
         this.loaded = new ReactiveVar(false);
     }
 
-    load() {
+    load(onSuccess) {
         if (this.loaded.curValue) return;
 
-        MIDI.loadPlugin({
-        soundfontUrl: './packages/midi-sound/soundfont/',
-        instrument: 'acoustic_grand_piano',
-        onsuccess: () => {
-            // check for AudioBuffers seems to be the best insurance right now
-            if (_.keys(MIDI.audioBuffers).length > 0) {
-                this.loaded.set(true);
-            }else {
-                throw new Meteor.Error('midi sound failed to load', '[MIDI Sound] Failed to load the MIDI Sound');
-            }
+        return new Promise((resolve, reject) => {
+            MIDI.loadPlugin({
+                soundfontUrl: './packages/midi-sound/soundfont/',
+                instrument: 'acoustic_grand_piano',
+                onsuccess: () => {
+                    // check for AudioBuffers seems to be the best insurance right now
+                    if (_.keys(MIDI.audioBuffers).length > 0) {
+                        this.loaded.set(true);
+                        resolve();
+                    }else {
+                        let error = new Meteor.Error('midi sound failed to load', '[MIDI Sound] Failed to load the MIDI Sound');
+                        reject(error);
+                    }
+                }
+            });
+        })
 
-        }
-    });
     }
 
     unload() {
