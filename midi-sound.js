@@ -5,7 +5,7 @@ MidiSound = class MidiSound{
     }
 
     load(onSuccess) {
-        if (this.loaded.curValue) return;
+        if (this.loaded.curValue) return Promise.resolve();
 
         return new Promise((resolve, reject) => {
             MIDI.loadPlugin({
