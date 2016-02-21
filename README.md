@@ -2,7 +2,7 @@
 
 
 Play some MIDI Sounds in the browser. Right now only a Piano is supported.
-
+Web Browser Support Only!
 
 ##midiSound
 
