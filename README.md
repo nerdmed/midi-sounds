@@ -17,6 +17,10 @@ Load needed soundfont for the piano
 Call the play function whenever you want to hear the sound for a key.
 Call it explicitly with noteOn = false on your noteOff events.
 
+###updateSustain(sustain);
+
+Midi Sound handles sustain > 0 as pedal on and sustain sustain == 0 as pedal off
+
 ###unload()
 
 Not implemented right now. Once loaded its in memory.
