@@ -39,31 +39,27 @@ MidiSound = class MidiSound{
         // MIDI.WebAudio.audioBuffers = {};
     }
 
-    // var note = 50; // the MIDI note
-    // var velocity = 127; // how hard the note hits
-    // noteOn - /or noteOff Boolean
-    play(key, velocity = 100, noteOn) {
-        if (!this.loaded.curValue) return console.error('[MIDI Sound] You are trying to play without loading the MIDI Sound');
-
-        MIDI.setVolume(0, velocity);
-
-        if (noteOn) {
-            MIDI.noteOn(0, key, velocity, 0);
-            if ((this.currentlySustaining === true) && (this.sustainedKeys.indexOf(key) < 0)) {
-                this.sustainedKeys.push(key);
-            }
-        } else if (!this.currentlySustaining) {
-            MIDI.noteOff(0, key, 0);
+    noteOn(key, velocity, channel = 0) {
+        MIDI.setVolume(channel, velocity, 0);
+        MIDI.noteOn(channel, key, velocity, 0);
+        if ((this.currentlySustaining === true) && (this.sustainedKeys.indexOf(key) < 0)) {
+            this.sustainedKeys.push(key);
         }
     }
 
-    updateSustain(sustain) {
+    noteOff(key, velocity, channel = 0) {
+        if (this.currentlySustaining) return;
+        MIDI.setVolume(channel, velocity, 0);
+        MIDI.noteOff(channel, key, 0);
+    }
+
+    setSustain(sustain, channel = 0) {
         if (sustain != null) this.currentlySustaining = sustain > 0;
 
         // when sustain is switched off, send noteOff to sustained keys
         if (sustain === 0) {
             for (let key of this.sustainedKeys) {
-                MIDI.noteOff(0, key, 0);
+                MIDI.noteOff(channel, key, 0);
             }
             this.sustainedKeys = [];
         }
