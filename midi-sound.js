@@ -2,6 +2,8 @@ MidiSound = class MidiSound{
 
     constructor() {
         this.loaded = new ReactiveVar(false);
+        this.currentlySustaining = false;
+        this.sustainedKeys = [];
     }
 
     load(onSuccess) {
@@ -16,7 +18,7 @@ MidiSound = class MidiSound{
                     if (_.keys(MIDI.audioBuffers).length > 0) {
                         this.loaded.set(true);
                         resolve();
-                    }else {
+                    } else {
                         let error = new Meteor.Error('midi sound failed to load', '[MIDI Sound] Failed to load the MIDI Sound');
                         reject(error);
                     }
@@ -37,14 +39,30 @@ MidiSound = class MidiSound{
         // MIDI.WebAudio.audioBuffers = {};
     }
 
-    // var note = 50; // the MIDI note
-    // var velocity = 127; // how hard the note hits
-    // noteOn - /or noteOff Boolean
-    play(note, velocity = 100, noteOn = true) {
-        if (!this.loaded.curValue) return console.error('[MIDI Sound] You are trying to play without loading the MIDI Sound');
-        MIDI.setVolume(0, velocity);
-        if (noteOn) MIDI.noteOn(0, note, velocity, 0);
-        else MIDI.noteOff(0, note, 0);
+    noteOn(key, velocity, channel = 0) {
+        MIDI.setVolume(channel, velocity, 0);
+        MIDI.noteOn(channel, key, velocity, 0);
+        if ((this.currentlySustaining === true) && (this.sustainedKeys.indexOf(key) < 0)) {
+            this.sustainedKeys.push(key);
+        }
+    }
+
+    noteOff(key, velocity, channel = 0) {
+        if (this.currentlySustaining) return;
+        MIDI.setVolume(channel, velocity, 0);
+        MIDI.noteOff(channel, key, 0);
+    }
+
+    setSustain(sustain, channel = 0) {
+        if (sustain != null) this.currentlySustaining = sustain > 0;
+
+        // when sustain is switched off, send noteOff to sustained keys
+        if (sustain === 0) {
+            for (let key of this.sustainedKeys) {
+                MIDI.noteOff(channel, key, 0);
+            }
+            this.sustainedKeys = [];
+        }
     }
 }
 

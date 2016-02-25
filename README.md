@@ -12,10 +12,15 @@ The package exports midiSound with the following functions
 
 Load needed soundfont for the piano
 
-###play(key, velocity=100, noteOn=true);
+###noteOn(key, velocity, channel = 0);
+Call to start playing a note. Sets main volume with velocity.
 
-Call the play function whenever you want to hear the sound for a key.
-Call it explicitly with noteOn = false on your noteOff events.
+###noteOff(key, velocity, channel = 0);
+Call to stop a currently playing note. Sets main volume with velocity.
+
+###setSustain(sustain, channel = 0);
+
+Midi Sound handles sustain > 0 as pedal on and sustain sustain == 0 as pedal off
 
 ###unload()
 
