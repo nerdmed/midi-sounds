@@ -1,6 +1,6 @@
 Package.describe({
     name: 'midi-sound',
-    version: '0.0.5',
+    version: '0.0.6',
 
     // Brief, one-line summary of the package.
     summary: 'Plays MIDI Sounds in the Browser',
