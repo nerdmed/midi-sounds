@@ -1,5 +1,5 @@
 Package.describe({
-    name: 'midi-sound',
+    name: 'flowkey:midi-sound',
     version: '0.0.6',
 
     // Brief, one-line summary of the package.
